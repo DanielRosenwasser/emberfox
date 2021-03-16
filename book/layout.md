@@ -296,7 +296,12 @@ Size and position
 
 Let's start in `BlockLayout`. Block layout objects are greedy and take
 take up all the horizontal space they can. So their width is their
-parent's width:
+parent's width:[^later-css]
+
+[^later-css]: In a real browser, the way the width is calculated
+depends on the CSS `width` property; this chapter just implements the
+`auto` value. We'll add support for user styles like this in the [next
+chapter](styles.md).
 
 ``` {.python}
 self.w = self.parent.w
