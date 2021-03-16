@@ -275,11 +275,12 @@ class InlineLayout:
         for x, y, word, font in self.display_list:
             display_list.append(DrawText(x, y, word, font))
 
-INLINE_ELEMENTS = [
-    "a", "em", "strong", "small", "s", "cite", "q", "dfn", "abbr",
-    "ruby", "rt", "rp", "data", "time", "code", "var", "samp",
-    "kbd", "sub", "sup", "i", "b", "u", "mark", "bdi", "bdo",
-    "span", "br", "wbr", "big"
+BLOCK_ELEMENTS = [
+    "html", "body", "article", "section", "nav", "aside",
+    "h1", "h2", "h3", "h4", "h5", "h6", "hgroup", "header",
+    "footer", "address", "p", "hr", "ol", "ul", "menu", "li",
+    "dl", "dt", "dd", "figure", "figcaption", "main", "div",
+    "table", "form", "fieldset", "legend", "details", "summary",
 ]
 
 def layout_mode(node):
@@ -288,10 +289,10 @@ def layout_mode(node):
     for child in node.children:
         if isinstance(child, Text):
             has_text = True
-        elif child.tag in INLINE_ELEMENTS:
-            has_text = True
-        else:
+        elif child.tag in BLOCK_ELEMENTS:
             has_containers = True
+        else:
+            has_text = True
     if has_containers or not has_text:
         return "block"
     else:
