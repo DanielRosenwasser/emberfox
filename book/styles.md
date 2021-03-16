@@ -780,37 +780,34 @@ big { font-size: 20px; }
 ```
 
 Another place where the code depends on specific tag names is
-`has_block_children`, which relies on a list of inline elements. The
-CSS `display`, which can be either `block` or `inline`, replaces that
-mechanism.[^lots-of-values] So we can add all the inline elements to
-our browser style sheet:
+`layout_mode`, which relies on the list `BLOCK_ELEMENTS` of block
+element tag names. The CSS `display` property, which can be either
+`block` or `inline`, replaces that mechanism.[^lots-of-values] So we
+can add all the block elements to our browser style sheet:
 
-[^lots-of-values]: Modern CSS adds way more values, like `run-in` or
-    `inline-block` or `flex` or `grid`, and it has layout modes set by
-    other properties, like `float` and `position`. These values allow
-    for layouts you couldn't do with just `block` and `inline`, and
-    people really care about making their web pages look good.
+[^lots-of-values]: Modern CSS adds way more values to this property,
+like `run-in` or `inline-block` or `flex` or `grid`, and it has layout
+modes set by other properties, like `float` and `position`. These
+values support layouts you couldn't do with just `block` and `inline`,
+and people really care about making their web pages look good.
 
 ``` {.css}
-a { display: inline; }
-em { display: inline; }
+html { display: block; }
+body { display: block; }
 /* ... */
 ```
 
-And then read that in `has_block_children`:[^default-block]
-
-[^default-block]: Actually, the `display` property is specified to
-    default to `inline`, not `block`, so a real browser would list all
-    the block elements in its browser stylesheet. But there are a lot
-    more of them, so I'm cutting a corner here.
+And then read that in `layout_mode`:
 
 ``` {.python}
-def has_block_children(self):
-    for child in self.node.children:
+def layout_mode(node):
+    # ...
+    for child in node.children:
         # ...
-        elif child.style.get("display", "inline") == "inline":
-            return False
-    return True
+        elif child.style.get("display", "inline") == "block":
+            has_containers = True
+        # ...
+    # ...
 ```
 
 With these changes, `InlineLayout` can lose its `open` and `close`
